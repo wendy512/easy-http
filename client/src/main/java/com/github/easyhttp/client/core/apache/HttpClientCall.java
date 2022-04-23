@@ -36,7 +36,7 @@ public class HttpClientCall implements IHttpClientCall {
     public void execute(IHttpClientCallback responseCallback) {
         try {
             httpClient.asyncDispatcher().execute(request, responseCallback);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new HttpException(e);
         }
     }

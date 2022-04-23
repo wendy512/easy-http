@@ -11,8 +11,6 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -36,7 +34,7 @@ public class AsyncDispatcher extends SyncDispatcher {
     }
 
     @Override
-    public void execute(HttpRequest request, IHttpClientCallback responseCallback) throws IOException {
+    public void execute(HttpRequest request, IHttpClientCallback responseCallback) throws Exception {
         if (null == asyncHttpClient) {
             throw new IllegalArgumentException("asyncHttpClient must be init");
         }
@@ -58,12 +56,6 @@ public class AsyncDispatcher extends SyncDispatcher {
             }
         });
 
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        future.get();
     }
 }

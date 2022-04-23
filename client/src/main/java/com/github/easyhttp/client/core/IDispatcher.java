@@ -12,5 +12,5 @@ import java.io.IOException;
 public interface IDispatcher {
     HttpResponse execute(HttpRequest request) throws IOException;
 
-    default void execute(HttpRequest request, IHttpClientCallback responseCallback) throws IOException {};
+    default void execute(HttpRequest request, IHttpClientCallback responseCallback) throws Exception {};
 }

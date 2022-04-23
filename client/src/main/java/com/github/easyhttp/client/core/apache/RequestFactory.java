@@ -143,6 +143,11 @@ public final class RequestFactory {
         return head;
     }
 
+    /**
+     * 文本类型entity参数
+     * @param body
+     * @return
+     */
     private static StringEntity createTextEntity(HttpRequestBody body) {
         String contextType = body.getContextType();
         String text = ((HttpRequestTextBody)body).getContent();
@@ -153,6 +158,11 @@ public final class RequestFactory {
         return null;
     }
 
+    /**
+     * from表单entity参数
+     * @param body
+     * @return
+     */
     private static UrlEncodedFormEntity createFromEntity(HttpRequestBody body) {
         Map<String, String> fromData = ((HttpRequestFormBody)body).getFromData();
         List<NameValuePair> pairs = new ArrayList<>();
@@ -171,9 +181,11 @@ public final class RequestFactory {
             MultipartEntityExtBuilder entityBuilder = MultipartEntityExtBuilder.create();
             entityBuilder.setContentType(ContentType.create(body.getContextType(), body.getCharset()));
             for (HttpRequestMultipartBody.Part part : parts) {
+                //文本类型part
                 if (part instanceof HttpRequestMultipartBody.TextPart) {
                     entityBuilder.addTextBody(part.name(), (String)part.value());
                 } else {
+                    //文件类型part
                     HttpRequestMultipartBody.FilePart filePart = (HttpRequestMultipartBody.FilePart)part;
                     entityBuilder.addPart(part.name(), new ByteArrayBody((byte[])filePart.value(),
                         ContentType.MULTIPART_FORM_DATA, filePart.fileName()));

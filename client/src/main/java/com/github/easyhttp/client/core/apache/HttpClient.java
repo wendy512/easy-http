@@ -99,7 +99,7 @@ public class HttpClient implements IHttpClient {
     }
 
     private HttpHost createProxyHost(HttpClientProxyConfig proxyConfig) {
-        //代理配置
+        //代理host
         if (null != proxyConfig && proxyConfig.isEnable()) {
             HttpHost proxy = new HttpHost(proxyConfig.getIp(), proxyConfig.getPort());
             return proxy;
@@ -108,7 +108,7 @@ public class HttpClient implements IHttpClient {
     }
     
     private BasicCredentialsProvider createProxyAuthenticator(HttpClientProxyConfig proxyConfig) {
-        //代理配置
+        //代理鉴权配置
         if (null != proxyConfig && proxyConfig.isEnable()) {
             if (StringUtils.isNotBlank(proxyConfig.getUsername()) && StringUtils.isNotBlank(proxyConfig.getPassword())) {
                 BasicCredentialsProvider provider = new BasicCredentialsProvider();
@@ -165,10 +165,13 @@ public class HttpClient implements IHttpClient {
         BasicCredentialsProvider proxyAuthenticator = createProxyAuthenticator(proxyConfig);
         clientBuilder.setProxy(proxyHost);
         clientBuilder.setDefaultCredentialsProvider(proxyAuthenticator);
-        //连接池配置
-        IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setIoThreadCount(Runtime.getRuntime().availableProcessors())
+        //reactor配置
+        IOReactorConfig ioReactorConfig = IOReactorConfig.custom()
                 .setConnectTimeout(toMillisecond(config.getConnectTimeout()))
-                .setSoTimeout(toMillisecond(config.getConnectTimeout())).build();
+                .setSoTimeout(toMillisecond(config.getReadTimeout()))
+                .setTcpNoDelay(true)
+                .setSelectInterval(100)
+                .build();
         ConnectingIOReactor ioReactor = null;
         try {
             ioReactor = new DefaultConnectingIOReactor(ioReactorConfig);
@@ -177,7 +180,6 @@ public class HttpClient implements IHttpClient {
         }
         PoolingNHttpClientConnectionManager connectPool = new PoolingNHttpClientConnectionManager(ioReactor);
         clientBuilder.setConnectionManager(connectPool);
-
         clientBuilder.setDefaultRequestConfig(configBuilder.build());
         //可以进行自定义配置
         ConfigureHandler configureCustomHandler = config.getConfigureCustomHandler();

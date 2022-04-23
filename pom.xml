@@ -14,7 +14,7 @@
     </modules>
 
     <name>easy http</name>
-    <description>easy http</description>
+    <description>easy http, the best http tool, supports a variety of http frameworks, currently supports apache httpclient, okhttp, simple configuration, supports definition configuration.</description>
     <url>https://github.com/wendy512/easy-http</url>
 
     <licenses>
@@ -44,8 +44,6 @@
         <targetJavaVersion>1.8</targetJavaVersion>
         <maven.test.skip>true</maven.test.skip>
         <revision>1.0.0</revision>
-        <!-- Springboot -->
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <junit.version>4.13.1</junit.version>
         <lombok.version>1.18.8</lombok.version>
         <http.client5.version>5.0.4</http.client5.version>
@@ -116,6 +114,20 @@
                     <source>${sourceJavaVersion}</source>
                     <target>${targetJavaVersion}</target>
                 </configuration>
+            </plugin>
+            <!-- Source attach plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

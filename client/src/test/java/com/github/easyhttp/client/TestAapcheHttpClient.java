@@ -97,4 +97,21 @@ public class TestAapcheHttpClient {
 
     }
 
+    @Test
+    public void testAsyncUpload() {
+        List<HttpRequestMultipartBody.Part> parts = new ArrayList<>();
+        parts.add(new HttpRequestMultipartBody.TextPart("name", "zhangsan"));
+        try {
+            parts.add(new HttpRequestMultipartBody.FilePart("file",
+                new File("C:\\Users\\Lenovo\\Pictures\\Camera Roll\\demo.jpg")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HttpRequest request = new HttpRequest.Builder().url("http://127.0.0.1:9091/test/upload")
+            .post(HttpRequestBody.create(parts)).build();
+        httpClient.newCall(request).execute((response) -> {
+            System.out.println(String.format("http code: %s, http response: %s", response.code(), response.asText()));
+        });
+    }
+
 }

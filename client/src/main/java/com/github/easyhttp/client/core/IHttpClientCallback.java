@@ -14,7 +14,7 @@ public interface IHttpClientCallback {
      * 失败回调
      * @param e
      */
-    void onFailure(Exception e);
+    default void onFailure(Exception e) { };
 
     /**
      * 响应回调
