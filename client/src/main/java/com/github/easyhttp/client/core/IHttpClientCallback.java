@@ -14,12 +14,12 @@ public interface IHttpClientCallback {
      * 失败回调
      * @param e
      */
-    void onFailure(IOException e);
+    void onFailure(Exception e);
 
     /**
      * 响应回调
      * @param response
      * @throws IOException
      */
-    void onResponse(HttpResponse response) throws IOException;
+    void onResponse(HttpResponse response);
 }

@@ -2,7 +2,6 @@ package com.github.easyhttp.client.core.okhttp3;
 
 import com.github.easyhttp.client.core.*;
 import com.github.easyhttp.client.exception.HttpException;
-import com.github.framework.easyhttp.core.*;
 
 import java.io.IOException;
 
@@ -28,15 +27,15 @@ public class HttpClientCall implements IHttpClientCall {
 
     public HttpResponse execute() {
         try {
-            return httpClient.dispatcher().execute(request);
+            return httpClient.syncDispatcher().execute(request);
         } catch (IOException e) {
             throw new HttpException(e);
         }
     }
 
-    public void enqueue(IHttpClientCallback responseCallback) {
+    public void execute(IHttpClientCallback responseCallback) {
         try {
-            httpClient.dispatcher().enqueue(request, responseCallback);
+            httpClient.asyncDispatcher().execute(request, responseCallback);
         } catch (IOException e) {
             throw new HttpException(e);
         }

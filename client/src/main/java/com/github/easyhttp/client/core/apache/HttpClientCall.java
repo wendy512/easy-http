@@ -1,7 +1,6 @@
 package com.github.easyhttp.client.core.apache;
 
 import com.github.easyhttp.client.core.*;
-import com.github.framework.easyhttp.core.*;
 import com.github.easyhttp.client.exception.HttpException;
 
 import java.io.IOException;
@@ -28,13 +27,17 @@ public class HttpClientCall implements IHttpClientCall {
 
     public HttpResponse execute() {
         try {
-            return httpClient.dispatcher().execute(request);
+            return httpClient.syncDispatcher().execute(request);
         } catch (IOException e) {
             throw new HttpException(e);
         }
     }
 
-    public void enqueue(IHttpClientCallback responseCallback) {
-        //apache client 异步执行先不实现
+    public void execute(IHttpClientCallback responseCallback) {
+        try {
+            httpClient.asyncDispatcher().execute(request, responseCallback);
+        } catch (IOException e) {
+            throw new HttpException(e);
+        }
     }
 }

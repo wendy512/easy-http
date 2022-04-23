@@ -24,12 +24,13 @@ public class Dispatcher implements IDispatcher {
     @Override
     public HttpResponse execute(HttpRequest request) throws IOException {
         Request realRequest = RequestFactory.create(request);
-        Response response = httpClient.newCall(realRequest).execute();
-        return ResponseFactory.create(response);
+        try (Response response = httpClient.newCall(realRequest).execute()){
+            return ResponseFactory.create(response);
+        }
     }
 
     @Override
-    public void enqueue(HttpRequest request, IHttpClientCallback responseCallback) throws IOException {
+    public void execute(HttpRequest request, IHttpClientCallback responseCallback) throws IOException {
         Request realRequest = RequestFactory.create(request);
         httpClient.newCall(realRequest).enqueue(new Callback() {
             @Override

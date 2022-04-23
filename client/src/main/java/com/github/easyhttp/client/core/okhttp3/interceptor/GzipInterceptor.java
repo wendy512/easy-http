@@ -1,6 +1,6 @@
 package com.github.easyhttp.client.core.okhttp3.interceptor;
 
-import com.github.easyhttp.client.core.HttpHeaders;
+import com.github.easyhttp.client.constant.HttpHeaders;
 import okhttp3.*;
 import okhttp3.internal.http.RealResponseBody;
 import okio.BufferedSink;

@@ -1,7 +1,9 @@
 package com.github.easyhttp.client.core;
 
+import com.github.easyhttp.client.constant.HttpContextType;
 import lombok.Getter;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
 @Getter
 public abstract class HttpRequestBody {
     protected String contextType;
+    protected Charset charset = Charset.forName("utf-8");
 
     public static HttpRequestBody create(String content) {
         return new HttpRequestTextBody(HttpContextType.JSON.getContextType(), content);
@@ -30,5 +33,9 @@ public abstract class HttpRequestBody {
 
     public static HttpRequestBody create(List<HttpRequestMultipartBody.Part> parts) {
         return new HttpRequestMultipartBody(HttpContextType.multipart_FORM_DATA.getContextType(), parts);
+    }
+
+    public void setCharset(Charset charset) {
+        this.charset = charset;
     }
 }

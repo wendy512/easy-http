@@ -1,8 +1,13 @@
 package com.github.easyhttp.client.core.okhttp3;
 
 import com.github.easyhttp.client.core.HttpResponse;
+import com.github.easyhttp.client.exception.HttpException;
 import okhttp3.Headers;
 import okhttp3.Response;
+import okio.BufferedSource;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * okhttp client response factory
@@ -16,8 +21,14 @@ public final class ResponseFactory {
 
     public static HttpResponse create(Response realResponse) {
         Headers headers = realResponse.headers();
-        HttpResponse response = HttpResponse.builder().code(realResponse.code()).body(realResponse.body().byteStream())
-            .headers(headers.toMultimap()).build();
-        return response;
+        InputStream stream = realResponse.body().byteStream();
+        BufferedSource source = realResponse.body().source();
+        try {
+            HttpResponse response = HttpResponse.builder().code(realResponse.code()).body(source.readByteArray())
+                .headers(headers.toMultimap()).build();
+            return response;
+        } catch (IOException e) {
+            throw new HttpException(e);
+        }
     }
 }

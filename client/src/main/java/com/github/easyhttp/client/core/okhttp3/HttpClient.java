@@ -1,10 +1,13 @@
 package com.github.easyhttp.client.core.okhttp3;
 
-import com.github.easyhttp.client.config.ConfigureCustomHandler;
+import com.github.easyhttp.client.config.ConfigureHandler;
 import com.github.easyhttp.client.config.HttpClientConfig;
 import com.github.easyhttp.client.config.HttpClientProxyConfig;
-import com.github.easyhttp.client.core.*;
-import com.github.framework.easyhttp.core.*;
+import com.github.easyhttp.client.constant.HttpHeaders;
+import com.github.easyhttp.client.core.HttpRequest;
+import com.github.easyhttp.client.core.IDispatcher;
+import com.github.easyhttp.client.core.IHttpClient;
+import com.github.easyhttp.client.core.IHttpClientCall;
 import okhttp3.Authenticator;
 import okhttp3.ConnectionPool;
 import okhttp3.Credentials;
@@ -37,7 +40,12 @@ public class HttpClient implements IHttpClient {
         return new HttpClientCall(request, this);
     }
 
-    public IDispatcher dispatcher() {
+    public IDispatcher syncDispatcher() {
+        return this.dispatcher;
+    }
+
+    @Override
+    public IDispatcher asyncDispatcher() {
         return this.dispatcher;
     }
 
@@ -66,9 +74,9 @@ public class HttpClient implements IHttpClient {
         }
 
         //可以进行自定义配置
-        ConfigureCustomHandler configureCustomHandler = config.getConfigureCustomHandler();
+        ConfigureHandler configureCustomHandler = config.getConfigureCustomHandler();
         if (null != configureCustomHandler) {
-            configureCustomHandler.configure(builder);
+            configureCustomHandler.configure(config, builder);
         }
         return builder.build();
     }

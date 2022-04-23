@@ -1,4 +1,4 @@
-package com.github.easyhttp.client.core;
+package com.github.easyhttp.client.constant;
 
 /**
  * http header 常量

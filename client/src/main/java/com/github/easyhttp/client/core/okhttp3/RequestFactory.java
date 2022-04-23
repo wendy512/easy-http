@@ -1,7 +1,7 @@
 package com.github.easyhttp.client.core.okhttp3;
 
+import com.github.easyhttp.client.constant.HttpMethod;
 import com.github.easyhttp.client.core.*;
-import com.github.framework.easyhttp.core.*;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,6 +42,7 @@ public final class RequestFactory {
                 realRequest = createDelete(request);
                 break;
         }
+        
         return realRequest;
     }
 
@@ -99,6 +100,7 @@ public final class RequestFactory {
 
     private static MultipartBody createMultipartBody(HttpRequestMultipartBody body) {
         MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MediaType.parse(body.getContextType()));
         List<HttpRequestMultipartBody.Part> parts = body.getParts();
         if (null != parts) {
             for (HttpRequestMultipartBody.Part part : parts) {

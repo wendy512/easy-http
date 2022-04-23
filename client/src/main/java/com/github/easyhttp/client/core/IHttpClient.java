@@ -17,8 +17,14 @@ public interface IHttpClient {
     IHttpClientCall newCall(HttpRequest request);
 
     /**
-     * 获取派发者，真正执行http的
+     * 获取同步派发者，真正执行http的
      * @return 对象实例
      */
-    IDispatcher dispatcher();
+    IDispatcher syncDispatcher();
+
+    /**
+     * 获取异步派发者，真正执行http的
+     * @return 对象实例
+     */
+    IDispatcher asyncDispatcher();
 }

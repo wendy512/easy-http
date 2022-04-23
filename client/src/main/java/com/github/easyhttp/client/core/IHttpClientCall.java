@@ -12,5 +12,5 @@ public interface IHttpClientCall {
 
     HttpResponse execute();
 
-    void enqueue(IHttpClientCallback responseCallback);
+    void execute(IHttpClientCallback responseCallback);
 }

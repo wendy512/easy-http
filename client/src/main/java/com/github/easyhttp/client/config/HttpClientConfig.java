@@ -21,22 +21,22 @@ public class HttpClientConfig {
      * 连接超时时间，单位：秒
      */
     @Builder.Default
-    private long connectTimeout = 60;
+    private int connectTimeout = 60;
     /**
      * 读取超时时间，单位：秒
      */
     @Builder.Default
-    private long readTimeout = 60;
+    private int readTimeout = 60;
     /**
      * 写入超时时间，单位：秒
      */
     @Builder.Default
-    private long writeTimeout = 60;
+    private int writeTimeout = 60;
     /**
      * 保持连接的最大时间，单位：秒
      */
     @Builder.Default
-    private long keepAlive = 180;
+    private int keepAlive = 180;
     /**
      * 最大空闲的连接数
      */
@@ -48,6 +48,7 @@ public class HttpClientConfig {
      */
     @Builder.Default
     private int maxConnections = 500;
+    
     /**
      * 请求是否压缩
      */
@@ -70,5 +71,5 @@ public class HttpClientConfig {
      * 需要特殊配置需求
      */
     @Builder.Default
-    private ConfigureCustomHandler configureCustomHandler;
+    private ConfigureHandler configureCustomHandler;
 }

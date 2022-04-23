@@ -1,18 +1,18 @@
 package com.github.easyhttp.client.core.apache;
 
+import com.github.easyhttp.client.constant.HttpHeaders;
+import com.github.easyhttp.client.constant.HttpMethod;
 import com.github.easyhttp.client.core.*;
-import com.github.framework.easyhttp.core.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.classic.methods.*;
-import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.NameValuePair;
-import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.http.message.BasicClassicHttpRequest;
-import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityExtBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,10 @@ import java.util.Map;
 public final class RequestFactory {
     private RequestFactory() {}
 
-    public static ClassicHttpRequest create(HttpRequest request) {
+    public static HttpRequestBase create(HttpRequest request) {
         assert null != request;
         HttpMethod method = request.method();
-        ClassicHttpRequest realRequest = null;
+        HttpRequestBase realRequest = null;
         switch (method) {
             case GET:
                 realRequest = createGet(request);
@@ -51,10 +51,8 @@ public final class RequestFactory {
             case DELETE:
                 realRequest = createDelete(request);
                 break;
-
         }
 
-        realRequest.addHeader(HttpHeaders.CONTENT_TYPE, request.body().getContextType());
         if (null != request.headers()) {
             for (Map.Entry<String, String> header : request.headers().entrySet()) {
                 realRequest.addHeader(header.getKey(), header.getValue());
@@ -63,7 +61,7 @@ public final class RequestFactory {
         return realRequest;
     }
 
-    private static ClassicHttpRequest createGet(HttpRequest request) {
+    private static HttpRequestBase createGet(HttpRequest request) {
         HttpGet get = new HttpGet(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -74,7 +72,7 @@ public final class RequestFactory {
         return get;
     }
 
-    private static ClassicHttpRequest createPost(HttpRequest request) {
+    private static HttpRequestBase createPost(HttpRequest request) {
         HttpPost post = new HttpPost(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -85,22 +83,23 @@ public final class RequestFactory {
         return post;
     }
 
-    private static void setResource(BasicClassicHttpRequest request, HttpRequestBody body) {
+    private static void setResource(HttpRequestBase request, HttpRequestBody body) {
         if (body instanceof HttpRequestTextBody) {
             StringEntity entity = createTextEntity(body);
             if (null != entity) {
-                request.setEntity(entity);
+                ((HttpEntityEnclosingRequestBase)request).setEntity(entity);
             }
+            request.addHeader(HttpHeaders.CONTENT_TYPE, body.getContextType());
         } else if (body instanceof HttpRequestFormBody) {
             UrlEncodedFormEntity fromEntity = createFromEntity(body);
-            request.setEntity(fromEntity);
+            ((HttpEntityEnclosingRequestBase)request).setEntity(fromEntity);
         } else if (body instanceof HttpRequestMultipartBody) {
-            UrlEncodedFormEntity fromEntity = createFromEntity(body);
-            request.setEntity(fromEntity);
+            HttpEntity entity = createMultipartEntity(body);
+            ((HttpEntityEnclosingRequestBase)request).setEntity(entity);
         }
     }
 
-    private static ClassicHttpRequest createHead(HttpRequest request) {
+    private static HttpRequestBase createHead(HttpRequest request) {
         HttpHead head = new HttpHead(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -111,7 +110,7 @@ public final class RequestFactory {
         return head;
     }
 
-    private static ClassicHttpRequest createPut(HttpRequest request) {
+    private static HttpRequestBase createPut(HttpRequest request) {
         HttpPut head = new HttpPut(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -122,7 +121,7 @@ public final class RequestFactory {
         return head;
     }
 
-    private static ClassicHttpRequest createPatch(HttpRequest request) {
+    private static HttpRequestBase createPatch(HttpRequest request) {
         HttpPatch head = new HttpPatch(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -133,7 +132,7 @@ public final class RequestFactory {
         return head;
     }
 
-    private static ClassicHttpRequest createDelete(HttpRequest request) {
+    private static HttpRequestBase createDelete(HttpRequest request) {
         HttpDelete head = new HttpDelete(request.url());
         HttpRequestBody body = request.body();
         if (null == body) {
@@ -148,7 +147,7 @@ public final class RequestFactory {
         String contextType = body.getContextType();
         String text = ((HttpRequestTextBody)body).getContent();
         if (StringUtils.isNotBlank(text)) {
-            StringEntity entity = new StringEntity(text);
+            StringEntity entity = new StringEntity(text, body.getCharset());
             return entity;
         }
         return null;
@@ -163,20 +162,21 @@ public final class RequestFactory {
             }
         }
 
-        return new UrlEncodedFormEntity(pairs);
+        return new UrlEncodedFormEntity(pairs, body.getCharset());
     }
 
     private static HttpEntity createMultipartEntity(HttpRequestBody body) {
         List<HttpRequestMultipartBody.Part> parts = ((HttpRequestMultipartBody)body).getParts();
         if (null != parts) {
-            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+            MultipartEntityExtBuilder entityBuilder = MultipartEntityExtBuilder.create();
+            entityBuilder.setContentType(ContentType.create(body.getContextType(), body.getCharset()));
             for (HttpRequestMultipartBody.Part part : parts) {
                 if (part instanceof HttpRequestMultipartBody.TextPart) {
                     entityBuilder.addTextBody(part.name(), (String)part.value());
                 } else {
                     HttpRequestMultipartBody.FilePart filePart = (HttpRequestMultipartBody.FilePart)part;
-                    entityBuilder.addBinaryBody(filePart.name(), (byte[])filePart.value(),
-                        ContentType.MULTIPART_FORM_DATA, filePart.fileName());
+                    entityBuilder.addPart(part.name(), new ByteArrayBody((byte[])filePart.value(),
+                        ContentType.MULTIPART_FORM_DATA, filePart.fileName()));
                 }
             }
             return entityBuilder.build();
@@ -184,4 +184,5 @@ public final class RequestFactory {
 
         return null;
     }
+
 }

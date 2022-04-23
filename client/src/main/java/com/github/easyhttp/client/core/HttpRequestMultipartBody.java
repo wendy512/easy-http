@@ -1,7 +1,11 @@
 package com.github.easyhttp.client.core;
 
+import com.github.easyhttp.common.IOUtils;
 import lombok.Getter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,6 +53,10 @@ public class HttpRequestMultipartBody extends HttpRequestBody {
 
         public FilePart(String name, byte[] value) {
             super(name, value);
+        }
+
+        public FilePart(String name, File file) throws IOException {
+            this(name, file.getName(), IOUtils.toByteArray(new FileInputStream(file)));
         }
 
         public FilePart(String name, String fileName, byte[] value) {

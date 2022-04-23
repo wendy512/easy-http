@@ -1,11 +1,8 @@
 package com.github.easyhttp.client.core;
 
 import lombok.Builder;
-import org.apache.commons.codec.Charsets;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +20,10 @@ public class HttpResponse {
      */
     private int code;
     
-    
     /**
      * 响应数据
      */
-    private InputStream body;
+    private byte[] body;
 
     /**
      * 响应头，header name -> values
@@ -42,33 +38,22 @@ public class HttpResponse {
         return this.code;
     }
     
+    public String asText(Charset charset) {
+        String text = new String(this.body, charset);
+        //help gc
+        this.body = null;
+        return text;
+    }
+
     public String asText() {
-        InputStreamReader in = null;
-        try {
-            in = new InputStreamReader(body, Charsets.toCharset("UTF-8"));
-            int n;
-            StringBuilderWriter output = new StringBuilderWriter();
-            char[] buffer = new char[8192];
-            while (-1 != (n = in.read(buffer))) {
-                output.write(buffer, 0, n);
-            }
-            return output.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (null != body) body.close();
-                if (null != in) in.close();
-                //help gc
-                this.body = null;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        String text = new String(this.body, Charset.forName("UTF-8"));
+        //help gc
+        this.body = null;
+        return text;
     }
     
-    public InputStream asStream() {
-        InputStream temp = body;
+    public byte[] asBytes() {
+        byte[] temp = body;
         //help gc
         this.body = null;
         return temp;

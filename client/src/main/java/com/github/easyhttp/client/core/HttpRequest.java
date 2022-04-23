@@ -1,5 +1,7 @@
 package com.github.easyhttp.client.core;
 
+import com.github.easyhttp.client.constant.HttpMethod;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
