@@ -16,7 +16,8 @@ public class HttpClientConfig {
     /**
      * 使用哪种连接框架
      */
-    private HttpClientWay httpClientWay;
+    @Builder.Default
+    private HttpClientWay httpClientWay = HttpClientWay.OKHTTP;
     /**
      * 连接超时时间，单位：秒
      */

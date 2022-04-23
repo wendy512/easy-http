@@ -191,8 +191,6 @@ public class HttpClient implements IHttpClient {
 
     public static final class Builder {
         private HttpClientConfig config;
-        private SyncDispatcher dispatcher;
-
 
         public Builder config(HttpClientConfig config) {
             this.config = config;

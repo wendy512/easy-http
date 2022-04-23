@@ -1,10 +1,10 @@
 package com.github.easyhttp.client.core.okhttp3;
 
 
-import org.apache.http.impl.client.HttpClientBuilder;
-
 import com.github.easyhttp.client.config.ConfigureHandler;
 import com.github.easyhttp.client.config.HttpClientConfig;
+
+import okhttp3.OkHttpClient;
 
 /**
  * 配置抽象类，适配一下配置类型
@@ -19,5 +19,5 @@ public abstract class OkHttpConfigureHandler implements ConfigureHandler {
         configure(config, builder);
     }
 
-    public abstract void configure(HttpClientConfig config, HttpClientBuilder builder);
+    public abstract void configure(HttpClientConfig config, OkHttpClient.Builder builder);
 }

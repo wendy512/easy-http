@@ -1,9 +1,8 @@
 package com.github.easyhttp.client;
 
 import com.github.easyhttp.client.config.HttpClientConfig;
-import com.github.easyhttp.client.config.HttpClientProxyConfig;
+import com.github.easyhttp.client.config.HttpClientWay;
 import com.github.easyhttp.client.core.*;
-import com.github.easyhttp.client.core.okhttp3.HttpClient;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,10 +26,9 @@ public class TestOkHttpClient {
     
     @Before
     public void init() {
-        HttpClientProxyConfig proxyConfig = HttpClientProxyConfig.builder().enable(false).ip("127.0.0.1").port(8888).build();
-        HttpClientConfig clientConfig = HttpClientConfig.builder().proxyConfig(proxyConfig).build();
-        
-        httpClient = new HttpClient.Builder().config(clientConfig).build();
+        HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.OKHTTP)
+            .configureCustomHandler(new CustomOkHttpConfigureHandler()).build();
+        httpClient = HttpClientFactory.create(clientConfig);
     }
 
     @Test
