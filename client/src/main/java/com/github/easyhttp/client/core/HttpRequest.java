@@ -18,14 +18,12 @@ public class HttpRequest {
     private final HttpMethod method;
     private final HttpRequestBody body;
     private Map<String, String> headers = Collections.emptyMap();
-    private final String encoding;
 
     public HttpRequest(Builder builder) {
         this.url = builder.url;
         this.method = builder.method;
         this.body = builder.body;
         this.headers = builder.headers;
-        this.encoding = builder.encoding;
     }
 
     public static class Builder {

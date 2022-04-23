@@ -1,5 +1,7 @@
-package com.github.easyhttp.client.core.apache.async;
+package com.github.easyhttp.client.core.apache;
 
+
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 
 import com.github.easyhttp.client.config.ConfigureHandler;
@@ -11,11 +13,17 @@ import com.github.easyhttp.client.config.HttpClientConfig;
  * @date 2022-04-18 16:23:16:23
  * @since 1.0.0
  */
-public abstract class ApacheAsyncConfigureHandler implements ConfigureHandler {
+public abstract class ApacheConfigureHandler implements ConfigureHandler {
     @Override
     public void configure(HttpClientConfig config, Object builder) {
-        configure(config, builder);
+        if (builder instanceof HttpClientBuilder) {
+            configure(config, (HttpClientBuilder) builder);
+        } else {
+            configure(config, (HttpAsyncClientBuilder) builder);
+        }
     }
     
+    public abstract void configure(HttpClientConfig config, HttpClientBuilder builder);
+
     public abstract void configure(HttpClientConfig config, HttpAsyncClientBuilder builder);
 }

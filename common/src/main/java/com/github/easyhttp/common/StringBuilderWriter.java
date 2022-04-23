@@ -1,4 +1,4 @@
-package com.github.easyhttp.client.core;
+package com.github.easyhttp.common;
 
 import java.io.Serializable;
 import java.io.Writer;

@@ -27,8 +27,8 @@ public class TestAapcheHttpClient {
     @Before
     public void init() {
         HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.APACHE_CLIENT)
-            .configureCustomHandler(new CustomApacheAsyncConfigureHandler()).build();
-        httpClient = HttpClientFactory.create(clientConfig);
+            .configureCustomHandler(new CustomApacheConfigureHandler()).build();
+        httpClient = HttpClientBuilder.create().config(clientConfig).build();
     }
 
     @Test

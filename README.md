@@ -1,17 +1,28 @@
 # easy-http
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.wendy512/easy-http/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.wendy512/easy-http/)
+
 easy http，最好用的http工具，支持多种http框架，目前支持apache httpclient、okhttp，简单配置，支持定义配置。
+## 集成
+如果你使用 Maven，你只需要在 pom.xml 中添加下面的依赖：
+```xml  
+<dependency>
+    <groupId>io.github.wendy512</groupId>
+    <artifactId>easy-http</artifactId>
+    <version>1.0.0</version>
+</dependency>
+``` 
 ## 如何使用
 同步请求
 ```java
 HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.OKHTTP).build();
-IHttpClient httpClient = HttpClientFactory.create(clientConfig);
+IHttpClient httpClient = HttpClientBuilder.create().config(clientConfig).build();
 HttpRequest request = new HttpRequest.Builder().url("http://youhost").get().build();
 HttpResponse response = httpClient.newCall(request).execute();
 ```
 异步请求
 ```java
 HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.OKHTTP).build();
-IHttpClient httpClient = HttpClientFactory.create(clientConfig);
+IHttpClient httpClient = HttpClientBuilder.create().config(clientConfig).build();
 HttpRequest request = new HttpRequest.Builder().url("http://youhost").get().build();
 httpClient.newCall(request).execute(new IHttpClientCallback() {
     @Override
@@ -40,28 +51,24 @@ HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpCli
             .configureCustomHandler(new CustomOkHttpConfigureHandler()).build();
 ```
 
-apache httpclient 异步自定义配置
+apache httpclient 自定义配置
 ```java
-public class CustomApacheAsyncConfigureHandler extends ApacheAsyncConfigureHandler {
-    @Override
-    public void configure(HttpClientConfig config, HttpAsyncClientBuilder builder) {
-        //do configure
-        builder.setMaxConnPerRoute(100);
-    }
-}
-HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.APACHE_CLIENT)
-            .configureCustomHandler(new CustomApacheAsyncConfigureHandler()).build();
-```
-apache httpclient 同步自定义配置
-```java
-public class CustomApacheSyncConfigureHandler extends ApacheSyncConfigureHandler {
+public class CustomApacheConfigureHandler extends ApacheConfigureHandler {
 
     @Override
     public void configure(HttpClientConfig config, HttpClientBuilder builder) {
         //do configure
         builder.setMaxConnPerRoute(100);
     }
+
+    @Override
+    public void configure(HttpClientConfig config, HttpAsyncClientBuilder builder) {
+        //do configure
+        builder.setMaxConnPerRoute(100);
+    }
 }
+
 HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.APACHE_CLIENT)
-            .configureCustomHandler(new CustomApacheSyncConfigureHandler()).build();
+            .configureCustomHandler(new CustomApacheConfigureHandler()).build();
 ```
+

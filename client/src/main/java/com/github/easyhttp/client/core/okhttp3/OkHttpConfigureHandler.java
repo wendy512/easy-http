@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient;
 public abstract class OkHttpConfigureHandler implements ConfigureHandler {
     @Override
     public void configure(HttpClientConfig config, Object builder) {
-        configure(config, builder);
+        configure(config, (OkHttpClient.Builder)builder);
     }
 
     public abstract void configure(HttpClientConfig config, OkHttpClient.Builder builder);

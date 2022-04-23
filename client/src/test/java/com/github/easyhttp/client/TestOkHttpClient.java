@@ -28,7 +28,7 @@ public class TestOkHttpClient {
     public void init() {
         HttpClientConfig clientConfig = HttpClientConfig.builder().httpClientWay(HttpClientWay.OKHTTP)
             .configureCustomHandler(new CustomOkHttpConfigureHandler()).build();
-        httpClient = HttpClientFactory.create(clientConfig);
+        httpClient = HttpClientBuilder.create().config(clientConfig).build();
     }
 
     @Test
