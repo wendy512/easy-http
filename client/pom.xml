@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>easy-http</artifactId>
-        <groupId>io.github.easyhttp</groupId>
+        <groupId>io.github.wendy512</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -30,7 +30,7 @@
             <artifactId>okhttp</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.easyhttp</groupId>
+            <groupId>io.github.wendy512</groupId>
             <artifactId>easy-http-common</artifactId>
             <version>${revision}</version>
         </dependency>
