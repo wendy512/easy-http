@@ -7,7 +7,7 @@
     <groupId>io.github.wendy512</groupId>
     <artifactId>easy-http</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>1.0.1</version>
     <modules>
         <module>client</module>
         <module>common</module>
@@ -39,7 +39,7 @@
     </scm>
     
     <properties>
-        <revision>1.0.0</revision>
+        <revision>1.0.1</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sourceJavaVersion>1.8</sourceJavaVersion>
         <targetJavaVersion>1.8</targetJavaVersion>

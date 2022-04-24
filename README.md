@@ -1,5 +1,6 @@
 # easy-http
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.wendy512/easy-http/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.wendy512/easy-http/)
+[![License](https://img.shields.io/github/license/alibaba/fastjson2?color=4D7A97&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 easy http，最好用的http工具，支持多种http框架，目前支持apache httpclient、okhttp，简单配置，支持定义配置。
 ## 集成
@@ -7,7 +8,7 @@ easy http，最好用的http工具，支持多种http框架，目前支持apache
 ```xml  
 <dependency>
     <groupId>io.github.wendy512</groupId>
-    <artifactId>easy-http</artifactId>
+    <artifactId>easy-http-client</artifactId>
     <version>1.0.0</version>
 </dependency>
 ``` 
