@@ -9,7 +9,7 @@ easy http，最好用的http工具，支持多种http框架，目前支持apache
 <dependency>
     <groupId>io.github.wendy512</groupId>
     <artifactId>easy-http-client</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ``` 
 ## 如何使用
